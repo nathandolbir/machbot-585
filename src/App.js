@@ -1,25 +1,18 @@
+import React, { useRef, useState } from 'react';
 import './App.css';
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/analytics';
+import * as creds from './initCreds';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCIbU7r8ovKudc3W-COb-OUMjn2huMv-r4",
-  authDomain: "oval-tuner-326314.firebaseapp.com",
-  projectId: "oval-tuner-326314",
-  storageBucket: "oval-tuner-326314.appspot.com",
-  messagingSenderId: "614927895475",
-  appId: "1:614927895475:web:9e6ef1e7f6eb8c802f59c6",
-  measurementId: "G-BK8T5T10B8"
-};
+firebase.initializeApp({creds})
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = firebase.auth(); // properties: currentUser, 
+const firestore = firebase.firestore();
+const analytics = firebase.analytics();
 function App() {
   const [user] = useAuthState(auth);
 
@@ -83,9 +76,8 @@ function ChatRoom(props) {
   }
   nameSet();
   //console.log(set);
-  const msgref = messagesRef.orderBy("createdAt");
-  const query = messagesRef.where("metadata", "==", false);
-  const [messages] = useCollectionData(query);
+  const chatmsgs = messagesRef.where("metadata", "==", false);
+  const [messages] = useCollectionData(chatmsgs);
   const [formValue, setFormValue] = useState('');
 
   const sendMessage = async (e) => {
@@ -146,7 +138,7 @@ function AddUser(props) {
   return (
     <form className="adduser" onSubmit={setName}>
 
-  <p>Hello {username}! What would you like Medibot to call you?</p>
+    <p>Hello {username}! What would you like Machbot to call you?</p>
       <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Enter a name" />
 
       <button type="submit" disabled={!formValue}>Set</button>
