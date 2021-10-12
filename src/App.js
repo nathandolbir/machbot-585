@@ -4,11 +4,18 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/analytics';
-import * as creds from './initCreds';
+import { credentials} from "./creds.json";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-
-firebase.initializeApp({creds})
+console.log(credentials);
+firebase.initializeApp({
+apiKey: "AIzaSyCIbU7r8ovKudc3W-COb-OUMjn2huMv-r4",
+authDomain: "oval-tuner-326314.firebaseapp.com",
+projectId: "oval-tuner-326314",
+storageBucket: "oval-tuner-326314.appspot.com",
+messagingSenderId: "614927895475",
+appId: "1:614927895475:web:9e6ef1e7f6eb8c802f59c6",
+measurementId: "G-BK8T5T10B8"});
 
 const auth = firebase.auth(); // properties: currentUser, 
 const firestore = firebase.firestore();
