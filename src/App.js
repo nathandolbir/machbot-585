@@ -4,10 +4,11 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/analytics';
-import { credentials} from "./creds.json";
+
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-console.log(credentials);
+
+// credential information for accessing firebase app, not a security concern
 firebase.initializeApp({
 apiKey: "AIzaSyCIbU7r8ovKudc3W-COb-OUMjn2huMv-r4",
 authDomain: "oval-tuner-326314.firebaseapp.com",
@@ -17,8 +18,8 @@ messagingSenderId: "614927895475",
 appId: "1:614927895475:web:9e6ef1e7f6eb8c802f59c6",
 measurementId: "G-BK8T5T10B8"});
 
-const auth = firebase.auth(); // properties: currentUser, 
-const firestore = firebase.firestore();
+const auth = firebase.auth(); // used for user authorization into app
+const firestore = firebase.firestore(); // used to access firestore doc-DB
 const analytics = firebase.analytics();
 function App() {
   const [user] = useAuthState(auth);
@@ -83,8 +84,9 @@ function ChatRoom(props) {
   }
   nameSet();
   //console.log(set);
-  const chatmsgs = messagesRef.where("metadata", "==", false);
-  const [messages] = useCollectionData(chatmsgs);
+  const query = messagesRef.orderBy('createdAt');
+
+  const [messages] = useCollectionData(query);
   const [formValue, setFormValue] = useState('');
 
   const sendMessage = async (e) => {
@@ -112,7 +114,7 @@ function ChatRoom(props) {
             <ChatMessage message={msg}/>
             <BotMessage message={msg}/>
           </React.Fragment>)}
-      {viewAddName ? <AddUser username = { username } messagesRef = {messagesRef} dummy = { dummy }></AddUser> : <p style={{position:"center", margin:"auto"}}>Welcome back, {name}!</p>}
+      {viewAddName ? <AddUser username = { username } messagesRef = {messagesRef} dummy = { dummy }></AddUser> : <p class = "user">Welcome back, {name}!</p>}
       <span ref={dummy}></span>
     </main>
     
@@ -135,7 +137,8 @@ function AddUser(props) {
     e.preventDefault();
     await messagesRef.doc("Name").set({
       name: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      // createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      // commented out so that I can correctly display messages ordered by createdAt
       metadata: true
     })
     setFormValue('');

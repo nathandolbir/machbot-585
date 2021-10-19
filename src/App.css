@@ -136,6 +136,11 @@ p {
   text-align: center;
 }
 
+p.user {
+  position:"center"; 
+  margin:"auto";
+}
+
 .message {
   display: flex;
   align-items: center;
