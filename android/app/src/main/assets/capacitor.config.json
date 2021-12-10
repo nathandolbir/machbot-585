@@ -1,0 +1,6 @@
+{
+	"appId": "com.dreamville.mediBot",
+	"appName": "mediBot",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}

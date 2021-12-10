@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "614927895475",
+    "project_id": "oval-tuner-326314",
+    "storage_bucket": "oval-tuner-326314.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614927895475:android:6790b7ae7fb1c9662f59c6",
+        "android_client_info": {
+          "package_name": "com.dreamville.mediBot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "614927895475-gloc6rqlqug68tpu7mb6djnu0p8fp3fk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWQF9eLf71VjhTiWmFrVQ4oElL-eiwfRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "614927895475-gloc6rqlqug68tpu7mb6djnu0p8fp3fk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

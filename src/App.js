@@ -30,11 +30,9 @@ function App() {
         <h1>⚛MediBot💬</h1>
         <SignOut />
       </header>
-
       <section>
         {user ? (<ChatRoom />) : <SignIn />}
       </section>
-
     </div>
   );
 }
@@ -60,15 +58,17 @@ function SignOut() {
 }
 
 
+
 function ChatRoom(props) {
   const dummy = useRef();
   let userid = auth.currentUser.uid;
   let username = auth.currentUser.displayName; // Nathan Dolbir
   const messagesRef = firestore.collection(userid);
+  const dialogRef = firestore.collection("dialog")
   const [name, setName] = useState('');
   const [viewAddName, setViewAddName] = useState(true);
   let nameRef = messagesRef.doc("Name");
-
+  
   function nameSet() {
     let bool = false;
      nameRef.get().then((docSnapshot) => {
@@ -86,48 +86,70 @@ function ChatRoom(props) {
   //console.log(set);
   const query = messagesRef.orderBy('createdAt');
 
-  const [messages] = useCollectionData(query);
+  const [messages, load] = useCollectionData(query);
+  let msgLength = 0;
+  if (load===false) {
+    msgLength = messages.length;
+  }
+  //const length = messages.length;
+  // console.log(length);
+
   const [formValue, setFormValue] = useState('');
+  // console.log(getNumMessages(messages));
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    const botResponse = generateBotResponse(formValue);
+    const botResponse = "I am thinking..."
     const { uid, photoURL } = auth.currentUser;
-    await messagesRef.add({
+    const docName = `message${msgLength}`;
+    await (messagesRef.doc(docName).set({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       botResponse: botResponse,
       metadata: false,
       uid,
       photoURL
-    })
+    }) && dialogRef.doc("InputOutput").set({
+      input: formValue, 
+      collection: userid, 
+      doc: docName}));
 
     setFormValue('');
     dummy.current.scrollIntoView({ behavior: 'smooth' });
   }
 
+
   return (<>
     <main>
       {
-      messages && messages.map(msg =>
+        messages && messages.map(msg =>
           <React.Fragment>
             <ChatMessage message={msg}/>
             <BotMessage message={msg}/>
-          </React.Fragment>)}
-      {viewAddName ? <AddUser username = { username } messagesRef = {messagesRef} dummy = { dummy }></AddUser> : <p class = "user">Welcome back, {name}!</p>}
+          </React.Fragment>)
+          }
+      {viewAddName ? <AddUser username = { username } messagesRef = {messagesRef} dummy = { dummy }></AddUser> :
+        <div class = "user">Welcome back, {name}!</div>
+      }
+      <ul class = "model">
+        <li>Model1</li>
+        <li>Model2</li>
+        <li>Model3</li>
+      </ul>
       <span ref={dummy}></span>
     </main>
     
-
+    
     <form onSubmit={sendMessage}>
 
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
-
+      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something to MediBot"/>
+      <div onClick="showList()">choose models</div>
       <button type="submit" disabled={!formValue}>🕊️</button>
 
     </form>
   </>)
 }
+
 function AddUser(props) {
   const [formValue, setFormValue] = useState('');
   const username = props.username;
@@ -156,16 +178,6 @@ function AddUser(props) {
   )
 }
 
-function generateBotResponse(text) {
-  return "This is the bot's response to \"" + text + "\"";
-}
-/*
-function AddName(props) {
-      return (
-            <p style={{margin:"20px"}}>You need to create a username</p>
-            <button>Submit</button>
-      )
-}*/
 function ChatMessage(props) {
   const { text, uid, photoURL } = props.message;
 
@@ -181,12 +193,22 @@ function ChatMessage(props) {
 
 function BotMessage(props) {
   const { botResponse } = props.message;
+  if (botResponse === "I am thinking...") {
+    return (<>
+      <div className={`message received`}>
+        <img src={'	https://blogs.3ds.com/northamerica/wp-content/uploads/sites/4/2019/08/Robots-Square-610x610.jpg'} />
+        <div class="dot-pulse"></div>
+      </div>
+    </>)
+  }
+  else {
   return (<>
-    <div className={`message received`}>
-      <img src={'	https://blogs.3ds.com/northamerica/wp-content/uploads/sites/4/2019/08/Robots-Square-610x610.jpg'} />
-      <p>{botResponse}</p>
-    </div>
-  </>)
+      <div className={`message received`}>
+        <img src={'	https://blogs.3ds.com/northamerica/wp-content/uploads/sites/4/2019/08/Robots-Square-610x610.jpg'} />
+        <p>{botResponse}</p>
+      </div>
+    </>)
+  }
 }
 
 export default App;
