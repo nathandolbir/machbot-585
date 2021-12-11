@@ -117,8 +117,53 @@ function ChatRoom(props) {
     setFormValue('');
     dummy.current.scrollIntoView({ behavior: 'smooth' });
   }
-
-
+  async function setModel(model) {
+    const modelsRef = dialogRef.doc("Models");
+    if (model === "DistilBERT") {
+      const poop = modelsRef.get("DistilBERT");    
+      if (poop === "false") { //tried seeing if changing to string would make it work
+        dialogRef.doc("Models").update({DistilBERT: "true"});
+      } // if you do console.log(poop) it returns a promise, not boolean
+        // so I don't know how to get the boolean value extracteed
+      else if (modelsRef.get("DistilBERT") === true) {
+        dialogRef.doc("Models").update({DistilBERT: false});
+      }
+    }
+    else if (model === "BERT") {
+      console.log(modelsRef.get("BERT"));
+      if (modelsRef.get("BERT") === false) {
+        dialogRef.doc("Models").update({BERT: true});
+      }
+      else if (modelsRef.get("BERT") === true) {
+        dialogRef.doc("Models").update({BERT: false});
+      }
+    }
+    else if (model === "RoBERTa") {
+      if (modelsRef.get("RoBERTa") === false) {
+        dialogRef.doc("Models").update({RoBERTa: true});
+      }
+      else if (modelsRef.get("RoBERTa") === true) {
+        dialogRef.doc("Models").update({RoBERTa: false});
+      }
+    }
+      else if (model === "MobileBERT") {
+        if (modelsRef.get("MobileBERT") === false) {
+          dialogRef.doc("Models").update({MobileBERT: true});
+        }
+        else if (modelsRef.get("MobileBERT") === true) {
+          dialogRef.doc("Models").update({MobileBERT: false});
+        }
+      }
+      else if (model === "Electra") {
+        if (modelsRef.get("Electra") === false) {
+          dialogRef.doc("Models").update({Electra: true});
+        }
+        else if (modelsRef.get("Electra") === true) {
+          dialogRef.doc("Models").update({Electra: false});
+        }
+      }
+    }
+   
   return (<>
     <main>
       {
@@ -132,9 +177,11 @@ function ChatRoom(props) {
         <div class = "user">Welcome back, {name}!</div>
       }
       <ul class = "model">
-        <li>Model1</li>
-        <li>Model2</li>
-        <li>Model3</li>
+        <li><h2 onClick={() => setModel("DistilBERT")}>DistilBERT</h2></li>
+        <li><h2 onClick={() => setModel("RoBERTa")}>RoBERTa</h2></li>
+        <li><h2 onClick={() => setModel("BERT")}>BERT</h2></li>
+        <li><h2 onClick={() => setModel("Electra")}>Electra</h2></li>
+        <li><h2 onClick={() => setModel("MobileBERT")}>MobileBERT</h2></li>
       </ul>
       <span ref={dummy}></span>
     </main>
@@ -143,7 +190,6 @@ function ChatRoom(props) {
     <form onSubmit={sendMessage}>
 
       <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something to MediBot"/>
-      <div onClick="showList()">choose models</div>
       <button type="submit" disabled={!formValue}>🕊️</button>
 
     </form>
