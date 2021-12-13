@@ -1,0 +1,11 @@
+# Function dependencies, for example:
+# package>=version
+tensorflow>=2.5.0
+tensorflow_text>=2.5.0
+numpy>=1.19.5
+google-cloud-firestore>=2.1.3
+firebase-admin>=5.0.1
+transformers
+autocorrect
+contractions
+google-cloud-storage
